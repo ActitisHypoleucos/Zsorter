@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+Date: 12. 12. 2021
+  Changes:
+    - Thumbnail shrinked
+    - removed settings to turn off the resorter as i could not make it work (pure code training)
+    - added check to ignore some mods if missing. I can't tell control.lua to check game.active_mod for some reasons (send help pls) so i used a very cheap n dirty workaround
+    - update comprehensive list of optional dependancies
+    - minor adjustment of various mods positioning
+---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+Date: 09. 12. 2021
+  Changes:
+    - Thumbnail fixed
+    - added strong dependencies to prevent system crash
+---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+Date: 09. 12. 2021
+  Changes:
+    - Thumbnail updated
+---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 06. 12. 2021
+  Changes:
+    - Creation
+    - First github commit
+  Tracked Issues:
+    - logistic filters retains the original group, subgroup and order
+    - very unstable
+    - very not tested
