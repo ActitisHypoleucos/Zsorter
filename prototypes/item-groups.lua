@@ -1,13 +1,13 @@
 data:extend(
   {
-    {--SCIENCE
+    {
     type = "item-group",
     name = "science",
     order = "b-a",
     icon = "__Zsorter__/graphics/item-group/science.png",
     icon_size = 64,
     },
-    {--FUELS
+    {
     type = "item-group",
     name = "fuelz",
     order = "c-b",
@@ -229,23 +229,31 @@ data:extend(
 --    end
 --  end
 --end
-
-function zrtNewSubGroup(newSubGroupName,refGroup,newOrder)
-  log("after logs should call extend")
-  log("name of table> "..tostring(newSubGroupName.name))
-  log("name of assigned group> "..tostring(refGroup))
-  log("order is> "..tostring(newOrder))
-  log("type of table> "..tostring(newSubGroupName))
-  --if newSubGroupName == "ammo-category" then
+--function zrtNewSubGroup(name,refGroup,order)
 --  data:extend(
---  {
---    {
---      type = "item-subgroup",
---      name = newSubGroupName.name,
+--    {{
+--      type = table["item-subgroup"],
+--      name = name,
 --      group = refGroup,
---      order = newOrder
---    }
---  }
+--      order = order
+--    }}
 --  )
-end
+--end
 
+
+
+
+
+--function MakeNewSubGroup(nameOfGroup,newsubMainGroup,order)
+ -- table.insert(data.raw["item-groups"], {type = "item-subgroup", name = nameOfGroup, group = newsubMainGroup,order = order})
+--data:extend(
+--    {
+--      {
+--        type = "item-subgroup",
+--        name = nameOfGroup,
+--        group = newsubMainGroup,
+--        order = order
+--      } 
+--    }
+--  )
+--end
