@@ -1,13 +1,13 @@
 data:extend(
   {
-    {
+    {--SCIENCE
     type = "item-group",
     name = "science",
     order = "b-a",
     icon = "__Zsorter__/graphics/item-group/science.png",
     icon_size = 64,
     },
-    {
+    {--FUELS
     type = "item-group",
     name = "fuelz",
     order = "c-b",
@@ -76,11 +76,6 @@ data:extend(
     group = "circuit",
     order = "e0[mod]-a[pavement_assistant]",
     },
-    --{--AI VEHICLES
-    --type = "item-group",
-    --name = "ai-vehicles",
-    --order = "h",
-    --},
     {--ai-structures
     type = "item-subgroup",
     name = "programmable-structures",
@@ -229,31 +224,45 @@ data:extend(
 --    end
 --  end
 --end
---function zrtNewSubGroup(name,refGroup,order)
---  data:extend(
---    {{
---      type = table["item-subgroup"],
---      name = name,
---      group = refGroup,
---      order = order
---    }}
---  )
---end
 
+function zrtNewSubGroup(newSubGroupName,refGroup,newOrder)
+	local tipologia = "item-subgroup" 
+	-- log("after logs should call extend")
+	 
+	-- log("type of table> "..tostring(newSubGroupName))
+	if newSubGroupName.type == "ammo-category" then
+    log("name of table> "..tostring(newSubGroupName.name))
+	 log("name of assigned group> "..tostring(refGroup))
+	 log("order is> "..tostring(newOrder))
+	  data:extend(
+		{{
+		  type = tipologia,
+		  name  = "zsrtammosubgroup-"..newSubGroupName.name,
+		  group = refGroup,
+		  order = newOrder
+		}}
+	  )
+	end
+end
 
-
-
-
---function MakeNewSubGroup(nameOfGroup,newsubMainGroup,order)
- -- table.insert(data.raw["item-groups"], {type = "item-subgroup", name = nameOfGroup, group = newsubMainGroup,order = order})
---data:extend(
---    {
---      {
---        type = "item-subgroup",
---        name = nameOfGroup,
---        group = newsubMainGroup,
---        order = order
---      } 
---    }
---  )
+----------------------------------
+---           OLD
+------------------------------------
+-- function zrtNewSubGroup(newSubGroupName,refGroup,newOrder)
+--   local tipologia = "item-subgroup" 
+--   log("after logs should call extend")
+--   log("name of table> "..tostring(newSubGroupName.name))
+--   log("name of assigned group> "..tostring(refGroup))
+--   log("order is> "..tostring(newOrder))
+--   log("type of table> "..tostring(newSubGroupName))
+--   if newSubGroupName.type == "ammo-category" then
+--     data:extend(
+--       {
+--         type = tipologia,
+--         name  = newSubGroupName.name,
+--         group = refGroup,
+--         order = newOrder
+--       }
+--     )
+--   end
 --end

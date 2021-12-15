@@ -13,8 +13,8 @@ require("prototypes.item-groups")
 --\require
 --/set bools for modcheck
 for _,item in pairs(data.raw.item) do
-	name = item.name
-	type = item.type
+	local name = item.name
+	local tipo = item.type
 	if name == "long-filter-inserter" then
 		zrt_controlBool_long_inserters = true
 	elseif name == "kr-logo" then
@@ -195,6 +195,7 @@ function sortdataset(dataset)
 --			dataset[str].subgroup = "vanilla-artillery-turret"
 --		elseif str == "antimatter-artillery-shell" then --antimatter
 --			dataset[str].subgroup = "vanilla-artillery-turret"
+
 		elseif str == "kr-singularity-beacon" then
 			if zrt_controlBool_AdvandcedModules then
 				dataset[str].subgroup = "a-beacon"
@@ -307,7 +308,6 @@ function sortdataset(dataset)
 			dataset[str].subgroup = "vanilla-turrets"
 		elseif str == "flamethrower-turret" then
 			dataset[str].subgroup = "vanilla-turrets"
-		
 		elseif str == "personal-laser-defense-equipment" and zrt_controlBool_krastorio2 ~= true then
 			dataset[str].subgroup = "character-equipment"
 		elseif str == "discharge-defense-equipment" and zrt_controlBool_krastorio2 ~= true then
@@ -350,40 +350,61 @@ end
 ----------------------------------------------------------------
 --SORT AMMO
 ----------------------------------------------------------------
---function zrtAmmo(dataset)
---	for a,s in pairs(dataset) do
---		ammovalcategory = s.name
---		log("category_dataset : " ..ammovalcategory)
---		log("index dataset : " ..s.type)
---		if ammovalcategory ~= nil then
---			zrtNewSubGroup(ammovalcategory,"combat","z")	
---		end
---	end
---end	
+function zrtAmmo(dataset)
+	for a,s in pairs(dataset) do
+		ammovalcategory = dataset[a].name
+		log("Ammo Category : " ..ammovalcategory)
+		--log("relative type : " ..s.type)
+		
+		--zrtNewSubGroup("coglione","ammo_group","z")
+		if s.type == "ammo-category" then
+			zrtNewSubGroup(s,"combat","z")	
+			log("SHOULD EXIST")
 			--put IN FRONT (to do) guns that use the ammo
---			for h,gunitem in pairs(data.raw.gun) do
---				if gunitem.attack_parameters.ammo_category == ammovalcategory then
---					changeMainDatasets(item,property,newValue)()
---					--end
---				----find a way to push the guns always first, and to apply this to buildings (turrets)
---				--log("gun item_name:".. gunitem.name)
---				--log("gun item_type:".. gunitem.type)
---				--if gunitem.subgroup == "gun" then
---				--	protyName = gunitem.name
---				--	if gunitem.attack_parameters.ammo_type ~= nil then
---				--		protyCate = gunitem.attack_parameters.ammo_type
---				--	else 
---				--		protyCate = gunitem.attack_parameters.ammo_category
---				--	end
---				--	log("nome ARMA:  ".. protyName)
---				--	--log("nome CATE:  ".. protyCate.name)
---				--	if protyCate == ammovalcategory then
---				--		if protyCate ~= nil and protyName ~= nil then
---				--			changerecipefolder(protyName,ammovalcategory)
---				--		end
---				--	end
---				end
+			for h,gunitem in pairs(data.raw.gun) do
+				log("GUN> "..gunitem.name)
+				log("GUN ATK PAR>"..gunitem.attack_parameters.ammo_category)
+				if gunItemAcceptsAmmo (gunitem.name, ammovalcategory) then
+					log("GUN SHOULD BE MOVED")
+					changeMainDatasets(data.raw.gun,gunitem.name,"subgroup","zsrtammosubgroup-"..ammovalcategory)
+				end
+			end
+			for h,ammoitem in pairs(data.raw.ammo) do
+				log("ammo> "..ammoitem.name)
+				if ammoitem.ammo_type.category ~= nil then
+					log("ammo ATK PAR>"..ammoitem.ammo_type.category)
+				else
+					log("category null!!")
+				end
+				if ammoitem.ammo_type.category == ammovalcategory then
+					log("ammo SHOULD BE MOVED")
+					changeMainDatasets(data.raw.ammo,ammoitem.name,"subgroup","zsrtammosubgroup-"..ammovalcategory)
+				end
+			end
+		end
+	end
+end	
+			
+			--end
+		----find a way to push the guns always first, and to apply this to buildings (turrets)
+		--log("gun item_name:".. gunitem.name)
+		--log("gun item_type:".. gunitem.type)
+		--if gunitem.subgroup == "gun" then
+		--	protyName = gunitem.name
+		--	if gunitem.attack_parameters.ammo_type ~= nil then
+		--		protyCate = gunitem.attack_parameters.ammo_type
+		--	else 
+		--		protyCate = gunitem.attack_parameters.ammo_category
+		--	end
+		--	log("nome ARMA:  ".. protyName)
+		--	--log("nome CATE:  ".. protyCate.name)
+		--	if protyCate == ammovalcategory then
+		--		if protyCate ~= nil and protyName ~= nil then
+		--			changerecipefolder(protyName,ammovalcategory)
+		--		end
+		--	end
 --			end
+--		end
 --
 --			--put every ammo of that category together
 --			for b,ammoItem in pairs(data.raw.ammo) do
@@ -409,115 +430,14 @@ end
 --			end
 --		--
 --	end
-
----------------------------------------------------------------- 
---function sortammo(dataset)
---	for a,category in pairs(dataset) do
---		ammovalcategory = category.name
---		
---		log("category_dataset : " ..ammovalcategory)
---		log("index dataset : " ..a)
---		--
---			MakeNewSubGroup(ammovalcategory ,"combat","z")
---		
---			--put IN FRONT (to do) guns that use the ammo
---			for h,gunitem in pairs(data.raw.gun) do
---				--find a way to push the guns always first, and to apply this to buildings (turrets)
---				log("gun item_name:".. gunitem.name)
---				log("gun item_type:".. gunitem.type)
---				if gunitem.subgroup == "gun" then
---					protyName = gunitem.name
---					if gunitem.attack_parameters.ammo_type ~= nil then
---						protyCate = gunitem.attack_parameters.ammo_type
---					else 
---						protyCate = gunitem.attack_parameters.ammo_category
---					end
---					log("nome ARMA:  ".. protyName)
---					--log("nome CATE:  ".. protyCate.name)
---					if protyCate == ammovalcategory then
---						if protyCate ~= nil and protyName ~= nil then
---							changerecipefolder(protyName,ammovalcategory)
---						end
---					end
---				end
---			end
---
---			--put every ammo of that category together
---			for b,ammoItem in pairs(data.raw.ammo) do
---				nomone = ammoItem.name
---				log("aiming to fill> "..ammovalcategory)
---				log("name of ammo> "..nomone)
---				if string.find(nomone, "rounds") and string.find(nomone,"magazine") then
---					nomone = string.gsub(nomone, '"rounds-magazine"', '"ammo-recipe"')
---					log("new name of ammo> "..nomone)
---				end
---
---				for c,ammospecs in pairs(data.raw.ammo[nomone].ammo_type) do
---					if ammospecs == "bullets" and zrt_controlBool_AnyModForRifleandPistolAmmo == true then
---						data.raw.ammo[nomone].subgroup = "rifle-ammo"
---					elseif ammospecs == ammovalcategory then
---						data.raw.ammo[nomone].subgroup = ammovalcategory
---						log("ammo add> "..nomone)
---						log("in subgroup> "..ammovalcategory)
---					elseif string.find(nomone, "flamethrower") and ammovalcategory == "flamethrower" then
---						data.raw.ammo[nomone].subgroup = ammovalcategory
---					end
---				end
---			end
---		--
---	end
---end
-
---
---/thx eduran by forumdigging for the reference of gsub about quotes
---
---
---local code_block = [[
---  local string_1, string_2 = "Hello World!", "foo"
---  local number = 123
---  local function foo(arg)
---    return tostring(arg) .. "\n"
---  end
---]]
---
---print(string.gsub(code_block, '".-"', '[color=64,64,64]%1[/color]'))  -- single quotes around double quotes
---print(string.gsub(code_block, "\".-\"", '[color=64,64,64]%1[/color]'))  -- escaped double quotes
---
---<output-->
--->local string_1, string_2 = [color=64,64,64]"Hello World!"[/color], [color=64,64,64]"foo"[/color]
--->local number = 123
--->local function foo(arg)
--->  return tostring(arg) .. [color=64,64,64]"\n"[/color]
--->end
---/
-
---["acid-rounds-magazine"] = {
---	ammo_type = {
---	  action = {
---		action_delivery = {
---		  target_effects = {
---			{
---			  entity_name = "acid-splash-fire-spitter-small",
---			  type = "create-entity"
---			},
---			{
---			  damage = {
---				amount = 20,
---				type = "acid"
---			  },
---			  type = "damage"
---			}
---		  },
---		  type = "instant"
---		},
---		type = "direct"
---	  },
---	  category = "bullet"
-
 -----------------------------------------------------------
 function gunItemAcceptsAmmo(givenGun,givenAmmo)
-	for p,givenAmmoRecord in pairs(data.raw.ammo[givenAmmo].ammotype) do
-		if data.raw.gun[givenGun].attack_parameters.ammo_category == givenAmmoRecord.category then
+	if givenGun ~= nil and givenAmmo ~= nil then
+		zrtgunCategory = data.raw.gun[givenGun].attack_parameters.ammo_category
+		if zrtgunCategory == givenAmmo then
+			log("gun accepts> "..zrtgunCategory)
+			log("Trying to compare> "..givenAmmo)
+			log("sposta")
 			return true
 		end
 	end
@@ -526,15 +446,34 @@ end
 function zrtChangeTableItemProperty(dataset,item,property,newValue)
 	for i,x in pairs(dataset) do
 		if x.name == item then
-			dataset[item].property = newvalue
+			log(x.name)
+			
+				log("assignV")
+				dataset[item][property] = newValue
+				--log(dataset)
+				log(tostring(item))
+				log(tostring(property))
+				log(tostring(newValue))
+			
 		end
 	end
 end
+
 -----------------------------------------------------------
---
-function changeMainDatasets(item,property,newValue)
+function changeMainDatasets(ogDataset,item,property,newValue)
+	if ogDataset == data.raw.gun then
+		log("changing [GUN] of>"..item)
+		--zrtChangeTableItemProperty(data.raw.gun,item,property,newValue)
+	
+	elseif ogDataset == data.raw.ammo then
+		log("changing [Ammo] of>"..item)
+		zrtChangeTableItemProperty(data.raw.gun,item,property,newValue)
+	end	
+	log("changing [item] of>"..item)
 	zrtChangeTableItemProperty(data.raw.item,item,property,newValue)
+	log("changing [recipe] of>"..item)
 	zrtChangeTableItemProperty(data.raw.recipe,item,property,newValue)
+end
 --v OLD
 --function changerecipefolder(prototypeName,prototypeSubGroup)
 --	if prototypeSubGroup ~= nil then
@@ -549,17 +488,20 @@ function changeMainDatasets(item,property,newValue)
 --			end
 --		end
 --	end
-end
+
+-----------------------------------------------------------
+--MAIN
 -----------------------------------------------------------
 	--getbools()
-	---zrtAmmo(data.raw["ammo-category"])	
+	zrtAmmo(data.raw["ammo-category"])	
 	sortdataset(data.raw.recipe)
 	sortdataset(data.raw.item)
 	--sortdataset(data.raw.signal)
-	
+	log(serpent.block(data.raw, {comment = true, refcomment = true, tablecomment = false}))
 	--sortammo(data.raw.ammo)
---check for mod, call using a table with names and presets values for namepool{name, type(if item), category(if recipe), group, subgroup, order, mod_name(if mod)} to handle the sorting
+--check for mod, call using a table with names and presets values for namepool{name, type(if item), category(if recipe), group, subgroup, order, mod_name(if mod)} to handle the sorting (?)*
 --if krastorio2 ~= nil then
 --	sortdataset(data.raw.item, namepool(where mod_name is krastorio2))
 --	sortdataset(data.raw.recipe, namepool(where mod_name is krastorio2))
 --end
+
